@@ -1,8 +1,8 @@
 # AISOP – AI Security Operations Platform
 
-AISOP is a SOC-style investigation platform built in **Python and Streamlit** that converts raw security telemetry into actionable incident investigations.
+AISOP is a Python-based Security Operations Platform built with **Streamlit** that simulates how modern SOC teams transform raw telemetry into investigations through detection engineering, incident correlation, MITRE ATT&CK mapping, attack chain analysis, and analyst workflows.
 
-The platform demonstrates how detection pipelines evolve into full **Security Operations Center (SOC) workflows**, including alert correlation, ATT&CK mapping, attack chain reconstruction, analyst investigation tools, and investigation report export.
+The platform demonstrates how security telemetry evolves into actionable incident response through alert generation, incident enrichment, investigation tooling, timeline reconstruction, and exportable investigation reporting.
 
 ---
 
@@ -21,6 +21,22 @@ Telemetry
 → Investigation Report Export
 
 ---
+
+---
+
+# Platform Screenshots
+
+## Incident Investigation Dashboard
+![Incident Investigation Dashboard](screenshots/investigation_dashboard.png)
+
+## Attack Chain Visualization
+![Attack Chain Visualization](screenshots/attack_chain.png)
+
+## Investigation Timeline
+![Investigation Timeline](screenshots/investigation_timeline.png)
+
+## Investigation Report Export
+![Investigation Report Export](screenshots/investigation_report.png)
 
 # Key Features
 
@@ -84,23 +100,12 @@ ReportLab (PDF generation)
 
 # Running the Project
 
+# Running the Project
+
 Clone the repository:
 
+```bash
 git clone https://github.com/santinoholmes1979/aisop.git
-
-
-Install dependencies:
-
-
-
-pip install -r requirements.txt
-
-
-Run the platform:
-
-
-
-streamlit run app.py
 
 
 ---
