@@ -625,19 +625,6 @@ def show_investigations():
         triage_df["incident_id"] == selected_incident_id
     ]
 
-    st.markdown("### DEBUG: TRIAGE DATA")
-
-    st.write("Selected Incident ID:", selected_incident_id)
-
-    st.write("Triage DataFrame Columns:")
-    st.write(triage_df.columns.tolist())
-
-    st.write("Triage DataFrame Preview:")
-    st.dataframe(triage_df, use_container_width=True)
-
-    st.write("Filtered Triage Rows:")
-    st.dataframe(selected_triage, use_container_width=True)
-
     selected_user = selected_incident.get("user", None)
     selected_host = selected_incident.get("host", None)
 
@@ -986,7 +973,7 @@ def show_ai_triage():
     st.write(f"**Title:** {selected_incident['title']}")
 
     st.markdown("---")
-    st.markdown("### AI Investigation Summary")
+    st.markdown("### 🤖 AI Investigation Summary")
 
     if not selected_triage.empty:
         triage_row = selected_triage.iloc[0]
@@ -1002,6 +989,7 @@ def show_ai_triage():
             st.write("No attack stages available.")
 
         st.markdown("### Recommended Analyst Actions")
+        st.caption("AI-generated investigation guidance")
         actions = str(triage_row["recommended_actions"]).split(";")
         for action in actions:
             action = action.strip()
