@@ -22,6 +22,26 @@ Telemetry
 
 ---
 
+# Platform Architecture
+
+AISOP processes security telemetry through a multi-stage detection and investigation pipeline.
+
+Telemetry Sources  
+↓  
+Detection Engine  
+↓  
+Alert Generation  
+↓  
+Incident Correlation  
+↓  
+MITRE ATT&CK Mapping  
+↓  
+Attack Chain Reconstruction  
+↓  
+SOC Investigation Dashboard  
+↓  
+Investigation Report Export
+
 ---
 
 # Platform Screenshots
