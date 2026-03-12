@@ -155,66 +155,12 @@ def show_overview():
         correlate incidents, and accelerate triage with AI-assisted analysis.
         """
     )
-
-    st.info("Phase 1: Project skeleton and application shell")
-
     col1, col2, col3, col4 = st.columns(4)
 
     col1.metric("Events Ingested", str(len(normalized_df)))
     col2.metric("Alerts Generated", str(len(all_alerts_df)))
     col3.metric("Open Incidents", str(len(incidents_df)))
     col4.metric("AI Summaries", "0")
-    st.markdown("---")
-    st.subheader("Detection Debug")
-
-    if not all_alerts_df.empty and "alert_type" in all_alerts_df.columns:
-
-        st.write(
-            "Encoded PowerShell alerts:",
-            len(all_alerts_df[all_alerts_df["alert_type"] == "Encoded PowerShell Execution"])
-        )
-
-        st.write(
-            "Password Spray alerts:",
-            len(all_alerts_df[all_alerts_df["alert_type"] == "Password Spray"])
-        )
-
-        st.write(
-            "RunKeyPersistence alerts:",
-            len(all_alerts_df[all_alerts_df["alert_type"] == "RunKeyPersistence"])
-        )
-
-    else:
-        st.write("No alerts generated yet.")
-
-    st.markdown("---")
-    st.subheader("Password Spray Debug")
-
-    if "source_ip" in normalized_df.columns and "user" in normalized_df.columns:
-
-        spray_debug_df = (
-            normalized_df[["source_ip", "user"]]
-            .dropna()
-            .groupby("source_ip")["user"]
-            .nunique()
-            .reset_index()
-            .sort_values("user", ascending=False)
-        )
-
-        spray_debug_df.columns = ["source_ip", "unique_users"]
-
-        st.dataframe(spray_debug_df, use_container_width=True)
-
-        if not spray_debug_df.empty:
-            st.write(
-                "Highest unique-user count from one source IP:",
-                int(spray_debug_df["unique_users"].max())
-            )
-        else:
-            st.write("No source_ip/user combinations found.")
-
-    else:
-        st.write("normalized_df is missing source_ip or user columns.")
 
     st.markdown("---")
     st.subheader("Detection Alerts")
@@ -309,9 +255,6 @@ def show_overview():
             operations without replacing detection logic or analyst judgment.
             """
         )
-
-    st.info("Phase 1: Project skeleton and application shell")
-
 
 def show_alerts():
     data = build_aisop_data()
@@ -598,6 +541,49 @@ def run_hunt_query(normalized_df, hunt_type, hunt_value):
 
     return pd.DataFrame()
 
+def render_incident_timeline_html(timeline_df):
+    if timeline_df.empty:
+        return "<p>No timeline events available.</p>"
+
+    html = '<div style="padding: 10px 0;">'
+
+    for _, row in timeline_df.iterrows():
+        timestamp = row.get("timestamp", "Unknown Time")
+        event_label = row.get("event_type")
+
+        if pd.isna(event_label) or str(event_label).strip() == "":
+            event_label = row.get("alert_type")
+
+        if pd.isna(event_label) or str(event_label).strip() == "":
+            event_label = row.get("process_name")
+
+        if pd.isna(event_label) or str(event_label).strip() == "":
+            event_label = row.get("event_category")
+
+        if pd.isna(event_label) or str(event_label).strip() == "":
+            event_label = "Unknown Event"
+
+        user = row.get("user", "Unknown User")
+        host = row.get("host", "Unknown Host")
+
+        if pd.isna(user) or str(user).strip() == "":
+            user = "Unknown User"
+
+        if pd.isna(host) or str(host).strip() == "":
+            host = "Unknown Host"
+
+        if pd.isna(timestamp):
+            timestamp = "Unknown Time"
+
+        html += f'<div style="border-left: 4px solid #4a90e2; margin: 10px 0 10px 12px; padding: 8px 12px; background-color: #0f172a; border-radius: 6px;">'
+        html += f'<div style="font-size: 0.85rem; color: #93c5fd; font-weight: 600;">{timestamp}</div>'
+        html += f'<div style="font-size: 1rem; font-weight: 700; color: #ffffff; margin-top: 4px;">{event_label}</div>'
+        html += f'<div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 4px;">User: {user} | Host: {host}</div>'
+        html += '</div>'
+
+    html += "</div>"
+    return html
+
 
 def show_investigations():
     data = build_aisop_data()
@@ -799,12 +785,33 @@ def show_investigations():
     else:
         st.write("No attack chain available for this incident.")
 
+    st.markdown("---")
+    st.markdown("### Incident Timeline Visualization")
 
-        st.markdown("---")
+    if not timeline_df.empty:
+        timeline_display_df = timeline_df.copy()
+
+        if "timestamp" in timeline_display_df.columns:
+            timeline_display_df = timeline_display_df[timeline_display_df["timestamp"].notna()]
+            timeline_display_df = timeline_display_df.sort_values("timestamp")
+
+        timeline_html = render_incident_timeline_html(timeline_display_df)
+        st.markdown(timeline_html, unsafe_allow_html=True)
+
+        display_columns = [
+            col for col in ["timestamp", "event_type", "alert_type", "process_name", "user", "host"]
+            if col in timeline_display_df.columns
+        ]
+
+        st.markdown("### Timeline Events")
+        st.dataframe(timeline_display_df[display_columns], use_container_width=True)
+    else:
+        st.write("No timeline events available for this incident.")
+
+    st.markdown("---")
     st.markdown("### Incident Narrative")
 
     if attack_chain:
-
         incident_user = selected_incident.get("user", "unknown user")
         incident_host = selected_incident.get("host", "unknown host")
         incident_title = selected_incident.get("title", "Suspicious activity detected")
@@ -824,7 +831,6 @@ def show_investigations():
                 f"The attack sequence progressed through the following ATT&CK stages: "
                 f"{' → '.join(attack_chain)}. Incident severity is currently assessed as {incident_severity}."
             )
-
         elif len(attack_chain) == 2:
             narrative = (
                 f"{incident_title} on {incident_host} involves correlated suspicious activity affecting "
@@ -832,7 +838,6 @@ def show_investigations():
                 f"Observed ATT&CK progression: {' → '.join(attack_chain)}. "
                 f"Incident severity is currently assessed as {incident_severity}."
             )
-
         else:
             narrative = (
                 f"{incident_title} on {incident_host} currently reflects single-stage suspicious activity "
@@ -842,7 +847,6 @@ def show_investigations():
             )
 
         st.info(narrative)
-
     else:
         st.write("No incident narrative available.")
 
@@ -878,17 +882,6 @@ def show_investigations():
         for i, note in enumerate(notes, start=1):
             st.info(f"Note {i}: {note}")
 
-
-    st.markdown("### Existing Notes")
-
-    notes = st.session_state.case_notes.get(incident_id, [])
-
-    if not notes:
-        st.write("No notes recorded for this incident.")
-    else:
-        for i, note in enumerate(notes, start=1):
-            st.info(f"Note {i}: {note}")
-    
     st.markdown("---")
     st.markdown("### Investigation Report")
 
@@ -908,16 +901,6 @@ def show_investigations():
         mime="application/pdf"
     )
 
-
-    st.markdown("---")
-    st.markdown("### Attack Timeline")
-
-
-    if not timeline_df.empty:
-        st.dataframe(timeline_df, use_container_width=True)
-    else:
-        st.write("No related events found.")
-
     st.markdown("---")
     st.markdown("### Raw Related Events")
 
@@ -925,6 +908,7 @@ def show_investigations():
         st.dataframe(related_events, use_container_width=True)
     else:
         st.write("No raw related events found.")
+
 
 def show_ai_triage():
     data = build_aisop_data()
@@ -1022,7 +1006,10 @@ def show_hunting():
         )
 
     with hunt_col2:
-        hunt_value = st.text_input("Search Value", placeholder="Enter a host, user, process, command line, or event type")
+        hunt_value = st.text_input(
+            "Search Value",
+            placeholder="Enter a host, user, process, command line, or event type"
+        )
 
     hunt_results_df = pd.DataFrame()
 
@@ -1080,7 +1067,6 @@ def show_hunting():
             st.dataframe(related_alerts, use_container_width=True)
     else:
         st.write("Run a hunt query to view related alerts.")
-
 def show_metrics():
     data = build_aisop_data()
     alerts_df = data["alerts_df"]
