@@ -1,0 +1,5 @@
+timestamp,user,host,process_name,parent_process,command_line
+2026-03-10T08:07:00Z,jdoe,WS-101,powershell.exe,explorer.exe,powershell.exe -enc SQBFAFgA
+2026-03-10T08:08:00Z,asmith,WS-102,cmd.exe,explorer.exe,cmd.exe /c whoami
+2026-03-10T08:09:00Z,svc_backup,SRV-201,backup.exe,services.exe,backup.exe --run
+2026-03-10T08:10:00Z,jdoe,WS-101,reg.exe,cmd.exe,reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v Updater

@@ -1,0 +1,5 @@
+timestamp,user,host,destination_ip,destination_port,protocol,action
+2026-03-10T08:11:00Z,jdoe,WS-101,198.51.100.25,443,TCP,allowed
+2026-03-10T08:12:00Z,asmith,WS-102,203.0.113.50,3389,TCP,blocked
+2026-03-10T08:13:00Z,svc_backup,SRV-201,192.168.10.20,445,TCP,allowed
+2026-03-10T08:14:00Z,jdoe,WS-101,198.51.100.25,443,TCP,allowed

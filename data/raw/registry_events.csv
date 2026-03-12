@@ -1,0 +1,4 @@
+timestamp,user,host,event_type,registry_path,registry_value
+2026-03-10T08:12:00Z,jdoe,WS-101,registry_set,HKCU\Software\Microsoft\Windows\CurrentVersion\Run,updater.exe
+2026-03-10T08:15:00Z,asmith,WS-202,registry_set,HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce,svc_host.exe
+2026-03-10T08:20:00Z,bjones,WS-303,registry_set,HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer,recentdocs

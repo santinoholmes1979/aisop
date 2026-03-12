@@ -1,0 +1,17 @@
+NORMALIZED_EVENT_COLUMNS = [
+    "timestamp",
+    "event_type",
+    "user",
+    "host",
+    "source_ip",
+    "destination_ip",
+    "destination_port",
+    "process_name",
+    "parent_process",
+    "command_line",
+    "action",
+    "status",
+    "raw_source",
+    "registry_path",
+    "registry_value",
+]
