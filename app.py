@@ -625,6 +625,19 @@ def show_investigations():
         triage_df["incident_id"] == selected_incident_id
     ]
 
+    st.markdown("### DEBUG: TRIAGE DATA")
+
+    st.write("Selected Incident ID:", selected_incident_id)
+
+    st.write("Triage DataFrame Columns:")
+    st.write(triage_df.columns.tolist())
+
+    st.write("Triage DataFrame Preview:")
+    st.dataframe(triage_df, use_container_width=True)
+
+    st.write("Filtered Triage Rows:")
+    st.dataframe(selected_triage, use_container_width=True)
+
     selected_user = selected_incident.get("user", None)
     selected_host = selected_incident.get("host", None)
 
@@ -705,9 +718,6 @@ def show_investigations():
 
     st.write(f"**Current Assignee:** {st.session_state.incident_assignees[incident_id]}")
 
-
-
-
     st.markdown("---")
     st.markdown("### Incident Overview")
 
@@ -731,8 +741,6 @@ def show_investigations():
     )
     st.write(f"**Assigned Analyst:** {current_assignee}")
 
-
-
     st.markdown("---")
     st.markdown("### AI Triage Summary")
 
@@ -743,6 +751,7 @@ def show_investigations():
         st.write(f"**Recommended Actions:** {triage_row['recommended_actions']}")
     else:
         st.write("No triage summary available.")
+
 
     st.markdown("---")
     st.markdown("### Related Alerts")
@@ -930,10 +939,76 @@ def show_investigations():
     else:
         st.write("No raw related events found.")
 
-
 def show_ai_triage():
+    data = build_aisop_data()
+
+    incidents_df = data["incidents_df"]
+    triage_df = data["triage_df"]
+    alerts_df = data["alerts_df"]
+
     st.title("AI Triage")
-    st.write("This page will generate AI-assisted summaries, explanations, and next steps.")
+    st.write("Generate AI-assisted investigation summaries, risk context, and recommended next steps.")
+
+    if incidents_df.empty:
+        st.write("No incidents available.")
+        return
+
+    incident_options = incidents_df["incident_id"].tolist()
+    selected_incident_id = st.selectbox("Select Incident", incident_options)
+
+    selected_incident = incidents_df[
+        incidents_df["incident_id"] == selected_incident_id
+    ].iloc[0]
+
+    selected_triage = triage_df[
+        triage_df["incident_id"].astype(str).str.strip() == str(selected_incident_id).strip()
+    ]
+
+    related_alerts = alerts_df.copy()
+    selected_host = selected_incident.get("host", None)
+
+    if selected_host and "host" in related_alerts.columns:
+        related_alerts = related_alerts[
+            related_alerts["host"].fillna("").astype(str) == str(selected_host)
+        ]
+
+    attack_chain = build_attack_chain(related_alerts)
+
+    st.markdown("---")
+    st.markdown("### Incident Context")
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Incident ID", selected_incident["incident_id"])
+    col2.metric("Severity", selected_incident["severity"])
+    col3.metric("Host", selected_incident["host"])
+
+    st.write(f"**User:** {selected_incident['user']}")
+    st.write(f"**Title:** {selected_incident['title']}")
+
+    st.markdown("---")
+    st.markdown("### AI Investigation Summary")
+
+    if not selected_triage.empty:
+        triage_row = selected_triage.iloc[0]
+        st.info(triage_row["summary"])
+
+        st.markdown("### Risk Assessment")
+        st.write(triage_row["risk"])
+
+        st.markdown("### Observed Attack Stages")
+        if attack_chain:
+            st.write(" → ".join(attack_chain))
+        else:
+            st.write("No attack stages available.")
+
+        st.markdown("### Recommended Analyst Actions")
+        actions = str(triage_row["recommended_actions"]).split(";")
+        for action in actions:
+            action = action.strip()
+            if action:
+                st.write(f"- {action}")
+    else:
+        st.warning("No AI triage summary available for this incident.")
 
 
 def show_hunting():
