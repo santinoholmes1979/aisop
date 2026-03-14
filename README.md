@@ -101,6 +101,32 @@ AISOP was designed to explore how security telemetry, detection engineering, and
 
 The project demonstrates how security analytics platforms convert raw telemetry into actionable investigations, supporting rapid understanding of adversary behavior in mission-critical environments.
 
+## Design Philosophy
+
+AISOP was designed to reflect how real Security Operations Centers process and analyze security telemetry.  
+The platform emphasizes several core principles common to modern security analytics systems.
+
+**Telemetry-Driven Analysis**
+
+Security detections are built around behavioral signals within telemetry rather than static indicators, reflecting how modern SOC teams identify adversary activity.
+
+**Detection Engineering Workflow**
+
+AISOP models how raw security events move through a detection pipeline where rules generate alerts, alerts correlate into incidents, and incidents become structured investigations.
+
+**Contextual Investigation**
+
+The platform enriches alerts with MITRE ATT&CK mapping, timeline reconstruction, and attack chain visualization so analysts can understand adversary behavior rather than isolated alerts.
+
+**Human-in-the-Loop Security**
+
+AISOP emphasizes analyst decision-making by providing investigation dashboards, timeline views, and exportable reports rather than fully automated response.
+
+**Explainable Security Analytics**
+
+The system prioritizes transparent detection logic and investigation workflows so analysts can understand why alerts occur and how incidents evolve.
+
+
 ## Technologies Used
 
 Python
