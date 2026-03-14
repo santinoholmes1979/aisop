@@ -149,7 +149,6 @@ AISOP is a portfolio project designed to demonstrate applied skills in:
 - Investigation Workflow Design
 
 ---
-
 # Running the Project
 
 Clone the repository:
@@ -157,18 +156,13 @@ Clone the repository:
 ```bash
 git clone https://github.com/santinoholmes1979/aisop.git
 cd aisop
-
 Install dependencies:
 
 pip install -r requirements.txt
-
-
 Run the application:
 
 streamlit run app.py
-
 Future Improvements
-
 AI-assisted triage summaries
 
 Threat intelligence enrichment
@@ -178,5 +172,4 @@ Automated detection rule evaluation
 Expanded incident reporting options
 
 About
-
 AI Security Operations Platform with incident correlation, MITRE ATT&CK mapping, attack chain reconstruction, mission-oriented incident briefing, and SOC investigation workflow.
