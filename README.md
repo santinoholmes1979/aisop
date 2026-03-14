@@ -156,25 +156,31 @@ Clone the repository:
 ```bash
 git clone https://github.com/santinoholmes1979/aisop.git
 cd aisop
+```
 
 Install dependencies:
 
+```bash
 pip install -r requirements.txt
+```
 
 Run the application:
 
+```bash
 streamlit run app.py
+```
 
-Future Improvements
+---
 
-AI-assisted triage summaries
+# Future Improvements
 
-Threat intelligence enrichment
+- AI-assisted triage summaries
+- Threat intelligence enrichment
+- Automated detection rule evaluation
+- Expanded incident reporting options
 
-Automated detection rule evaluation
+---
 
-Expanded incident reporting options
-
-About
+# About
 
 AI Security Operations Platform with incident correlation, MITRE ATT&CK mapping, attack chain reconstruction, mission-oriented incident briefing, and SOC investigation workflow.
