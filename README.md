@@ -6,41 +6,132 @@ The platform demonstrates how security telemetry evolves into actionable inciden
 
 ---
 
-# Platform Overview
+System Architecture & SOC Investigation Workflow
 
-AISOP simulates a modern security operations investigation pipeline:
+AISOP simulates how a modern Security Operations Center converts raw telemetry into structured investigations.
+The platform models the full pipeline from security event generation to analyst investigation and reporting.
 
-Telemetry  
-→ Detection Rules  
-→ Alert Generation  
-→ Incident Correlation  
-→ MITRE ATT&CK Mapping  
-→ Attack Chain Reconstruction  
-→ Incident Risk Scoring  
-→ Analyst Workflow & Investigation  
-→ Investigation Report Export
+Architecture Overview
+Security Telemetry Generator
+        │
+        ▼
+   Raw Endpoint Events
+        │
+        ▼
+   Detection Engine
+   (MITRE ATT&CK aligned rules)
+        │
+        ▼
+   Alert Generation
+        │
+        ▼
+   Incident Correlation Engine
+        │
+        ▼
+   ATT&CK Mapping & Enrichment
+        │
+        ▼
+   Attack Chain Reconstruction
+        │
+        ▼
+   Investigation Timeline
+        │
+        ▼
+   SOC Analyst Dashboard (Streamlit)
+        │
+        ▼
+   Investigation Report Export
 
----
+Platform Components
+Security Telemetry Generator
 
-# Platform Architecture
+Simulates enterprise endpoint telemetry including process activity, authentication events, and persistence mechanisms to model adversary behavior within a controlled environment.
 
-AISOP processes security telemetry through a multi-stage detection and investigation pipeline.
+Detection Engine
 
-Telemetry Sources  
-↓  
-Detection Engine  
-↓  
-Alert Generation  
-↓  
-Incident Correlation  
-↓  
-MITRE ATT&CK Mapping  
-↓  
-Attack Chain Reconstruction  
-↓  
-SOC Investigation Dashboard  
-↓  
+Applies detection logic aligned with MITRE ATT&CK techniques to identify suspicious behavior such as:
+
+Encoded PowerShell execution
+
+Password spraying activity
+
+Registry persistence
+
+Alert Generation
+
+Security events that match detection rules are converted into structured alerts for analyst triage.
+
+Incident Correlation Engine
+
+Alerts are automatically grouped into incidents based on shared indicators such as:
+
+Host
+
+User
+
+Time window
+
+Behavioral pattern
+
+This models how SOC platforms correlate alerts into investigations.
+
+ATT&CK Mapping & Enrichment
+
+Detected behaviors are mapped to MITRE ATT&CK tactics and techniques to provide contextual understanding of adversary activity.
+
+Attack Chain Reconstruction
+
+AISOP reconstructs adversary behavior sequences by linking related events into a coherent attack chain, helping analysts understand how an intrusion unfolded.
+
+Investigation Timeline
+
+Incidents are visualized through structured timelines allowing analysts to follow the progression of attacker activity across systems.
+
+SOC Analyst Dashboard
+
+A Streamlit-based investigation interface enables analysts to:
+
+Review incidents
+
+Pivot across telemetry
+
+Analyze attack chains
+
+Evaluate alert context
+
 Investigation Report Export
+
+AISOP generates structured investigation reports summarizing:
+
+Incident context
+
+Attack chain analysis
+
+MITRE ATT&CK mapping
+
+Analyst findings
+
+These reports simulate the type of documentation produced during real security investigations.
+
+Why AISOP Was Built
+
+AISOP was designed to explore how security telemetry, detection engineering, and analyst workflows connect inside modern SOC environments.
+
+The project demonstrates how security analytics platforms convert raw telemetry into actionable investigations, supporting rapid understanding of adversary behavior in mission-critical environments.
+
+Technologies Used
+
+Python
+
+Streamlit
+
+MITRE ATT&CK Framework
+
+Security Telemetry Simulation
+
+Detection Engineering Pipelines
+
+Incident Correlation Logic
 
 ---
 
